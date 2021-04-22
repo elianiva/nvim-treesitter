@@ -76,6 +76,9 @@ function M.select_compiler_args(repo, compiler)
     if fn.has('win32') == 0 then
      table.insert(args, '-fPIC')
     end
+    if fn.has('mac') == 1 then
+     table.insert(args, ' -std=c++11')
+    end
     return args
   end
 end
