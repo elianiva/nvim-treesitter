@@ -11,7 +11,7 @@ jobs:
         cc: [ gcc, clang ]
         exclude:
           - os: macos-latest
-            cc: gcc
+            cc: clang-12
 
         include:
           - os: windows-latest
@@ -39,8 +39,6 @@ jobs:
 
       - name: Check query files (Unix)
         if: matrix.os != 'windows-latest'
-        env:
-          ALLOWED_INSTALLATION_FAILURES: haskell
         run: nvim --headless -c "luafile ./scripts/check-queries.lua" -c "q"
 
       - name: Compile parsers Windows

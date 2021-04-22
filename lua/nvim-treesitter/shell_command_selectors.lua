@@ -54,6 +54,19 @@ function M.select_executable(executables)
 end
 
 function M.select_compiler_args(repo, compiler)
+  local c = vim.tbl_filter(function(file)
+    local ext = vim.split(file, ".", true)
+    return ext[#ext] == "c"
+  end, repo.files)
+
+  local cpp = vim.tbl_filter(function(file)
+    local ext = vim.split(file, ".", true)
+    return ext[#ext] == "cc" or ext[#ext] == "cpp"
+  end, repo.files)
+
+  c = vim.tbl_isempty(c) and "" or vim.tbl_flatten { "-x", "c", "-std=c99", c }
+  cpp = vim.tbl_isempty(cpp) and "" or vim.tbl_flatten { "-x", "c++", "-std=c++14", cpp }
+
   if (string.match(compiler, 'cl$') or string.match(compiler, 'cl.exe$')) then
     return {
       '/Fe:',
@@ -68,7 +81,8 @@ function M.select_compiler_args(repo, compiler)
       '-o',
       'parser.so',
       '-I./src',
-      repo.files,
+      c,
+      cpp,
       '-shared',
       '-Os',
       '-lstdc++',
@@ -76,10 +90,7 @@ function M.select_compiler_args(repo, compiler)
     if fn.has('win32') == 0 then
      table.insert(args, '-fPIC')
     end
-    if fn.has('mac') == 1 then
-     table.insert(args, ' -std=c++11')
-    end
-    return args
+    return vim.tbl_flatten(args)
   end
 end
 

@@ -11,7 +11,7 @@ local shell = require'nvim-treesitter.shell_command_selectors'
 local M = {}
 local lockfile = {}
 
-M.compilers = { vim.fn.getenv('CC'), "cc", "gcc", "clang", "cl" }
+M.compilers = { vim.fn.getenv('CC'), "cc", "gcc", "clang", "cl", "clang-12" }
 
 local started_commands = 0
 local finished_commands = 0
